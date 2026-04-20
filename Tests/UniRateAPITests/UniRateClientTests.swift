@@ -124,13 +124,45 @@ final class UniRateClientTests: XCTestCase {
     func testVATForCountry() async throws {
         let (client, _) = makeClient { request in
             let body = #"""
-            {"vat_data": {"country_code": "DE", "country": "Germany", "vat_rate": 19.0}}
+            {"country": "DE", "vat_data": {"country_code": "DE", "country_name": "Germany", "vat_rate": 19.0}}
             """#.data(using: .utf8)!
             return (body, httpResponse(url: request.url!, status: 200))
         }
         let resp = try await client.getVATRate(country: "DE")
+        XCTAssertEqual(resp.country, "DE")
         XCTAssertEqual(resp.vatData.vatRate, 19.0)
         XCTAssertEqual(resp.vatData.countryCode, "DE")
+        XCTAssertEqual(resp.vatData.countryName, "Germany")
+    }
+
+    func testVATAllCountries() async throws {
+        let (client, _) = makeClient { request in
+            let body = #"""
+            {"date": "2026-01-22", "total_countries": 2, "vat_rates": {"DE": {"country_code": "DE", "country_name": "Germany", "vat_rate": 19.0}, "FR": {"country_code": "FR", "country_name": "France", "vat_rate": 20.0}}}
+            """#.data(using: .utf8)!
+            return (body, httpResponse(url: request.url!, status: 200))
+        }
+        let resp = try await client.getVATRates()
+        XCTAssertEqual(resp.totalCountries, 2)
+        XCTAssertEqual(resp.date, "2026-01-22")
+        XCTAssertEqual(resp.vatRates["DE"]?.vatRate, 19.0)
+        XCTAssertEqual(resp.vatRates["FR"]?.countryName, "France")
+    }
+
+    func testHistoricalPaywall() async throws {
+        // Free-tier key receives 403 for historical endpoints; ensure we surface it.
+        let (client, _) = makeClient { request in
+            let body = #"{"error": "Historical data access requires a Pro subscription"}"#.data(using: .utf8)!
+            return (body, httpResponse(url: request.url!, status: 403))
+        }
+        do {
+            _ = try await client.getHistoricalRate(date: "2024-01-01", from: "USD", to: "EUR")
+            XCTFail("Expected apiError for 403")
+        } catch UniRateError.apiError(let code, _) {
+            XCTAssertEqual(code, 403)
+        } catch {
+            XCTFail("Expected .apiError, got \(error)")
+        }
     }
 
     // MARK: - Error paths

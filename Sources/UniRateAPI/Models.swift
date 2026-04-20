@@ -22,29 +22,33 @@ public struct HistoricalLimitsResponse: Decodable, Sendable, Equatable {
 
 public struct VATRate: Decodable, Sendable, Equatable {
     public let countryCode: String?
-    public let country: String?
+    public let countryName: String?
     public let vatRate: Double
 
     private enum CodingKeys: String, CodingKey {
         case countryCode = "country_code"
-        case country
+        case countryName = "country_name"
         case vatRate = "vat_rate"
     }
 }
 
 public struct VATCountryResponse: Decodable, Sendable, Equatable {
+    public let country: String?
     public let vatData: VATRate
 
     private enum CodingKeys: String, CodingKey {
+        case country
         case vatData = "vat_data"
     }
 }
 
 public struct VATRatesResponse: Decodable, Sendable, Equatable {
+    public let date: String?
     public let totalCountries: Int
     public let vatRates: [String: VATRate]
 
     private enum CodingKeys: String, CodingKey {
+        case date
         case totalCountries = "total_countries"
         case vatRates = "vat_rates"
     }
