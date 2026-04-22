@@ -153,8 +153,14 @@ let client = UniRateClient(apiKey: "test", session: StubSession())
 
 ## Related clients
 
-- [unirate-api-python](https://github.com/UniRate-API/unirate-api-python) (PyPI: `unirate-api`)
-- [unirate-api-nodejs](https://github.com/UniRate-API/unirate-api-nodejs) (npm: `unirate-api`)
+- [unirate-api-python](https://github.com/UniRate-API/unirate-api-python) — Python (PyPI: `unirate-api`)
+- [unirate-api-nodejs](https://github.com/UniRate-API/unirate-api-nodejs) — Node.js / TypeScript (npm: `unirate-api`)
+- [unirate-api-java](https://github.com/UniRate-API/unirate-api-java) — Java (Maven)
+- [unirate-api-go](https://github.com/UniRate-API/unirate-api-go) — Go
+- [unirate-api-rust](https://github.com/UniRate-API/unirate-api-rust) — Rust (crates.io: `unirate-api`)
+- [unirate-api-ruby](https://github.com/UniRate-API/unirate-api-ruby) — Ruby (gem: `unirate-api`)
+- [unirate-api-php](https://github.com/UniRate-API/unirate-api-php) — PHP (Composer: `unirate-api/unirate-api`)
+- [unirate-api-dotnet](https://github.com/UniRate-API/unirate-api-dotnet) — .NET / C# (NuGet: `UniRateApi`)
 
 ## License
 
